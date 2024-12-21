@@ -1,11 +1,11 @@
-package com.ovinkin.pillsreminder.ui.theme
+package com.ovinkin.practice3_jsonplaceholder.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PastelWarmPink = Color(0xFFFFC1D1)
+val PastelWarmPeach = Color(0xFFFFE0B5)
+val PastelWarmMint = Color(0xFFB2E2D4)
+val PastelWarmSand = Color(0xFFFFEAB6)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val DarkTextColor = Color(0xFF2C2C2C)
+val LightTextColor = Color(0xFF3F3F3F)

@@ -9,28 +9,40 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import com.ovinkin.practice3_jsonplaceholder.ui.theme.DarkTextColor
+import com.ovinkin.practice3_jsonplaceholder.ui.theme.LightTextColor
+import com.ovinkin.practice3_jsonplaceholder.ui.theme.PastelWarmMint
+import com.ovinkin.practice3_jsonplaceholder.ui.theme.PastelWarmPeach
+import com.ovinkin.practice3_jsonplaceholder.ui.theme.PastelWarmPink
 
+// Тёмная цветовая схема
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = PastelWarmPink,
+    secondary = PastelWarmPeach,
+    tertiary = PastelWarmMint,
+    background = DarkTextColor,
+    surface = Color(0xFF424242), // Темная поверхность
+    onPrimary = Color.White,
+    onSecondary = DarkTextColor,
+    onTertiary = Color.White,
+    onSurface = Color.White,
+    onBackground = LightTextColor,
 )
 
+// Светлая цветовая схема
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = PastelWarmPink,
+    secondary = PastelWarmPeach,
+    tertiary = PastelWarmMint,
+    background = Color.White,
+    surface = Color.White,
+    onPrimary = DarkTextColor,
+    onSecondary = DarkTextColor,
+    onTertiary = DarkTextColor,
+    onSurface = DarkTextColor,
+    onBackground = DarkTextColor,
 )
 
 @Composable
