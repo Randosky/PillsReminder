@@ -1,7 +1,9 @@
 package com.ovinkin.pillsreminder.domain.repository
 
-interface IAuthRepository {
-    fun login(email: String, password: String): Boolean
+import com.ovinkin.pillsreminder.data.model.UserData
 
-    fun register(fullName: String, email: String, password: String, role: String): Boolean
+interface IAuthRepository {
+    suspend fun login(userData: UserData): Boolean
+
+    suspend fun register(userData: UserData): Boolean
 }

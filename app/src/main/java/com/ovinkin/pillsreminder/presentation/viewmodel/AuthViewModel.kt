@@ -1,23 +1,42 @@
 package com.ovinkin.pillsreminder.presentation.viewmodel
 
-import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.ovinkin.pillsreminder.data.model.UserData
 import com.ovinkin.pillsreminder.data.repository.AuthRepository
-import kotlinx.coroutines.launch
 
 class AuthViewModel(private val authRepository: AuthRepository) : ViewModel() {
-    fun login(email: String, password: String) {
-        viewModelScope.launch {
-            Log.w("login", "залогинились")
-            authRepository.login(email, password)
+
+    var error: String? by mutableStateOf(null)
+    var loading: Boolean by mutableStateOf(false)
+
+    suspend fun login(userData: UserData): Boolean {
+        loading = true
+        return try {
+            val isAuthenticated = authRepository.login(userData)
+            error = null
+            isAuthenticated
+        } catch (e: Exception) {
+            error = e.localizedMessage
+            false
+        } finally {
+            loading = false
         }
     }
 
-    fun register(fullName: String, email: String, password: String, role: String) {
-        viewModelScope.launch {
-            Log.w("register", "регистрация")
-            authRepository.register(fullName, email, password, role)
+    suspend fun register(userData: UserData): Boolean {
+        loading = true
+        return try {
+            val isRegistered = authRepository.register(userData)
+            error = null
+            isRegistered
+        } catch (e: Exception) {
+            error = e.localizedMessage
+            false
+        } finally {
+            loading = false
         }
     }
 }

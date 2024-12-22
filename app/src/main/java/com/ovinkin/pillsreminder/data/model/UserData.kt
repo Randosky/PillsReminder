@@ -1,4 +1,5 @@
 package com.ovinkin.pillsreminder.data.model
 
-class UserData {
-}
+data class UserData(
+    val fullName: String?, val email: String, val password: String, val selectedRole: String?
+)

@@ -19,14 +19,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.ovinkin.pillsreminder.presentation.navigation.NavigationItem
 import com.ovinkin.pillsreminder.presentation.viewmodel.AuthViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
+    val loading = authViewModel.loading
+    val error = authViewModel.error
 
     Column(
         modifier = Modifier
@@ -36,7 +40,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Login",
+            text = "Авторизация",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -44,7 +48,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
         TextField(
             value = email.value,
             onValueChange = { email.value = it },
-            label = { Text("Email") },
+            label = { Text("Почта") },
             placeholder = { Text("example@example.com") },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -54,21 +58,36 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
         TextField(
             value = password.value,
             onValueChange = { password.value = it },
-            label = { Text("Password") },
+            label = { Text("Пароль") },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         Button(
             onClick = {
-                authViewModel.login(email.value, password.value)
-                navController.navigate(NavigationItem.MainScreen.route)
-            },
-            modifier = Modifier.fillMaxWidth()
+                authViewModel.viewModelScope.launch {
+                    val authenticated = authViewModel.login(
+                        com.ovinkin.pillsreminder.data.model.UserData(
+                            "", email.value, password.value, ""
+                        )
+                    )
+                    if (authenticated) {
+                        navController.navigate(NavigationItem.MainScreen.route)
+                    }
+                }
+            }, modifier = Modifier.fillMaxWidth(), enabled = !loading
         ) {
-            Text("Login")
+            Text(if (loading) "Загрузка..." else "Войти")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -77,7 +96,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
             onClick = { navController.navigate(NavigationItem.RegisterScreen.route) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Don't have an account? Register")
+            Text("Нет аккаунта? Зарегистрируйтесь")
         }
     }
 }

@@ -1,34 +1,31 @@
 package com.ovinkin.pillsreminder.presentation.ui.auth
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import android.os.Build
+import android.service.autofill.UserData
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.ovinkin.pillsreminder.presentation.navigation.NavigationItem
 import com.ovinkin.pillsreminder.presentation.viewmodel.AuthViewModel
+import kotlinx.coroutines.launch
 
+@ExperimentalMaterial3Api
 @Composable
 fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostController) {
     val fullName = remember { mutableStateOf("") }
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-    val role = remember { mutableStateOf("") }
+    val selectedRole = remember { mutableStateOf("Выберите роль") }
+    val isDropDownExpanded = remember { mutableStateOf(false) }
+    val roles = listOf("Врач", "Пациент")
 
     Column(
         modifier = Modifier
@@ -38,7 +35,7 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Register",
+            text = "Регистрация",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(bottom = 24.dp)
         )
@@ -46,7 +43,7 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
         TextField(
             value = fullName.value,
             onValueChange = { fullName.value = it },
-            label = { Text("Full Name") },
+            label = { Text("ФИО") },
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -55,7 +52,7 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
         TextField(
             value = email.value,
             onValueChange = { email.value = it },
-            label = { Text("Email") },
+            label = { Text("Почта") },
             placeholder = { Text("example@example.com") },
             modifier = Modifier.fillMaxWidth(),
         )
@@ -65,32 +62,53 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
         TextField(
             value = password.value,
             onValueChange = { password.value = it },
-            label = { Text("Password") },
+            label = { Text("Пароль") },
             visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier.fillMaxWidth(),
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        // Поле для выбора роли (Медик или Пациент)
-        TextField(
-            value = role.value,
-            onValueChange = { role.value = it },
-            label = { Text("Role (doctor or patient)") },
             modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Box(modifier = Modifier.fillMaxWidth()) {
+            Column {
+                Text(
+                    text = selectedRole.value,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable { isDropDownExpanded.value = true },
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                DropdownMenu(expanded = isDropDownExpanded.value, onDismissRequest = {
+                    isDropDownExpanded.value = false
+                }) {
+                    roles.forEach { role ->
+                        DropdownMenuItem(text = { Text(text = role) }, onClick = {
+                            selectedRole.value = role
+                            isDropDownExpanded.value = false
+                        })
+                    }
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = {
-                // Выполнение логики регистрации
-                authViewModel.register(fullName.value, email.value, password.value, role.value)
-                navController.navigate(NavigationItem.MainScreen.route)
-            },
-            modifier = Modifier.fillMaxWidth()
+                authViewModel.viewModelScope.launch {
+                    val registered = authViewModel.register(
+                        com.ovinkin.pillsreminder.data.model.UserData(
+                            fullName.value, email.value, password.value, selectedRole.value
+                        )
+                    )
+                    if (registered) {
+                        navController.navigate(NavigationItem.MainScreen.route)
+                    }
+                }
+            }, modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text("Зарегистрироваться")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -99,7 +117,7 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
             onClick = { navController.navigate(NavigationItem.LoginScreen.route) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Already have an account? Login")
+            Text("Уже есть аккаунт? Войти")
         }
     }
 }

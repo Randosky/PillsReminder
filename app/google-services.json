@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "930712609090",
+    "project_id": "pillsreminder-6f328",
+    "storage_bucket": "pillsreminder-6f328.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930712609090:android:09122ff4c447af50c0a8db",
+        "android_client_info": {
+          "package_name": "com.ovinkin.pillsreminder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgWbJn7IYcSHN2CobSr16JyN_XgAfTxV0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
