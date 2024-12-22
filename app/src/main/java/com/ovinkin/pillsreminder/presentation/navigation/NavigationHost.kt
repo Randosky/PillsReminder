@@ -17,6 +17,7 @@ import com.ovinkin.pillsreminder.presentation.viewmodel.AuthViewModel
 import com.ovinkin.pillsreminder.presentation.viewmodel.UserViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationHost(navController: NavHostController) {
 
