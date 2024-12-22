@@ -19,6 +19,7 @@ fun BottomBar(navController: NavHostController) {
 
     val screens = listOf(
         NavigationItem.MainScreen,
+        NavigationItem.UserProfile,
     )
 
     BottomNavigation(modifier = Modifier.height(72.dp)) {

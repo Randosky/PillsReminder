@@ -26,19 +26,19 @@ sealed class NavigationItem(
         route = "profile", title = "Профиль", icon = Icons.Rounded.Person
     )
 
-    data object Patients : NavigationItem(
-        route = "patients", title = "Пациенты", icon = Icons.AutoMirrored.Rounded.List
+    data object EditProfile : NavigationItem(
+        route = "editProfile", title = "Редактировать Профиль"
     )
 
-    data object Treatment : NavigationItem(
-        route = "treatment", title = "Лечение", icon = Icons.Rounded.Favorite
-    )
-
-    data object TreatmentDetail : NavigationItem(
-        route = "treatmentDetail", title = "Препарат"
+    data object AddPatient : NavigationItem(
+        route = "addPatient", title = "Добавить пациента"
     )
 
     data object SetTreatment : NavigationItem(
         route = "setTreatment", title = "Назначить лечение"
+    )
+
+    data object TreatmentDetail : NavigationItem(
+        route = "treatmentDetail", title = "Препарат"
     )
 }

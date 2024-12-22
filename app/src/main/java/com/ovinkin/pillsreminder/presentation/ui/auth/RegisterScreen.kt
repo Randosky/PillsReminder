@@ -1,8 +1,5 @@
 package com.ovinkin.pillsreminder.presentation.ui.auth
 
-import android.os.Build
-import android.service.autofill.UserData
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -13,6 +10,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.ovinkin.pillsreminder.data.model.UserRole
 import com.ovinkin.pillsreminder.presentation.navigation.NavigationItem
 import com.ovinkin.pillsreminder.presentation.viewmodel.AuthViewModel
 import kotlinx.coroutines.launch
@@ -25,7 +23,10 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
     val password = remember { mutableStateOf("") }
     val selectedRole = remember { mutableStateOf("Выберите роль") }
     val isDropDownExpanded = remember { mutableStateOf(false) }
-    val roles = listOf("Врач", "Пациент")
+    val roles = listOf(UserRole.DOCTOR.toString(), UserRole.PATIENT.toString())
+
+    val loading = authViewModel.loading
+    val error = authViewModel.error
 
     Column(
         modifier = Modifier
@@ -94,6 +95,14 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        if (error != null) {
+            Text(
+                text = error,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         Button(
             onClick = {
                 authViewModel.viewModelScope.launch {
@@ -106,9 +115,9 @@ fun RegisterScreen(authViewModel: AuthViewModel, navController: NavHostControlle
                         navController.navigate(NavigationItem.MainScreen.route)
                     }
                 }
-            }, modifier = Modifier.fillMaxWidth()
+            }, modifier = Modifier.fillMaxWidth(), enabled = !loading
         ) {
-            Text("Зарегистрироваться")
+            Text(if (loading) "Загрузка..." else "Войти")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

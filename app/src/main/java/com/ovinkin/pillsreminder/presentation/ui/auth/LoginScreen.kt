@@ -78,7 +78,7 @@ fun LoginScreen(authViewModel: AuthViewModel, navController: NavHostController) 
                 authViewModel.viewModelScope.launch {
                     val authenticated = authViewModel.login(
                         com.ovinkin.pillsreminder.data.model.UserData(
-                            "", email.value, password.value, ""
+                            email = email.value, password = password.value
                         )
                     )
                     if (authenticated) {

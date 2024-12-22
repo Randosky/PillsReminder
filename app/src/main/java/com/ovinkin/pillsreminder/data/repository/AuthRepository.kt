@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.ovinkin.pillsreminder.data.model.UserData
+import com.ovinkin.pillsreminder.data.model.UserRole
 import com.ovinkin.pillsreminder.domain.repository.IAuthRepository
 import kotlinx.coroutines.tasks.await
 
@@ -34,7 +35,7 @@ class AuthRepository(
             val userDataMap = mapOf(
                 "fullName" to userData.fullName,
                 "email" to userData.email,
-                "role" to userData.selectedRole
+                "selectedRole" to userData.selectedRole
             )
 
             firestore.collection("users").document(result.user?.uid ?: "").set(userDataMap).await()
